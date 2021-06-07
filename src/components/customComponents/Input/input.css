@@ -1,0 +1,22 @@
+.input__block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.input__block_element {
+    width: 30%;
+}
+.input__block_element input {
+    width: 100%;
+    padding: 5px;
+    border: 2px solid black;
+}
+
+.input__error {
+    color: red;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}

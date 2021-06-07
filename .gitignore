@@ -1,0 +1,38 @@
+# dependencies
+/node_modules
+
+# testing
+/coverage
+*.snap
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Next.js
+/.next
+/out
+
+# production
+/build
+/dist
+/.next
+
+#Ignore idea
+.idea
+.idea/*
+jsconfig.json
+.vscode/launch.json
+.vscode
+
+#Eslint
+.eslintcache
