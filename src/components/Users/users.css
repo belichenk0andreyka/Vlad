@@ -1,0 +1,80 @@
+.users {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.users__title {
+    width: 80%;
+    margin-bottom: 10px;
+}
+
+.users__title button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+    font-size: 17px;
+}
+
+.users__table {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px solid black;
+}
+
+.table__row_header {
+    border-bottom: 1px solid black;
+}
+
+.table__row_item {
+    border-right: 1px solid black;
+}
+
+.table__row_item:last-child {
+    border-right: 0;
+}
+
+.table__row {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.table__row_item {
+    text-align: center;
+}
+
+.table__login {
+    width: 20%;
+}
+.table__first_name {
+    width: 20%;
+}
+.table__last_name {
+    width: 20%;
+}
+.table__age {
+    width: 10%;
+}
+.table__role {
+    width: 10%;
+}
+.table__actions {
+    width: 20%;
+    display: flex;
+    justify-content: space-around;
+}
+.table__actions button{
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}

@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route} from "react-router-dom";
 import Login from "../Login";
 import Register from "../Register";
 import Users from "../Users";
-import PrivateRoute from "../../utils/PrivateRoute";
+// import PrivateRoute from "../../utils/PrivateRoute";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -19,7 +19,8 @@ export default () => {
             <Router>
                 <Route exact path={ROUTER_PATHS.LOGIN} component={Login} />
                 <Route path={ROUTER_PATHS.REGISTER} component={Register} />
-                <PrivateRoute path={ROUTER_PATHS.USERS} component={Users} auth={false} />
+                {/*<PrivateRoute path={ROUTER_PATHS.USERS} component={Users} auth={false} />*/}
+                <Route path={ROUTER_PATHS.USERS} component={Users} />
             </Router>
         </div>
     );
