@@ -7,6 +7,7 @@ export const registerState = {
     last_name: '',
     birthday: '',
     captcha: '',
+    role: 'Admin',
     isErrorLogin:false,
     isErrorPassword: false,
     isErrorpassword_again: false,

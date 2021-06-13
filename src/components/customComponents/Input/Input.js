@@ -2,7 +2,7 @@ import React from 'react';
 
 import './input.css';
 
-const Input = ({ onChange, isError, error, type, name, ref, value, placeholder, fieldName }) => {
+const Input = ({ onChange, isError, error, type, name, ref, value, placeholder, fieldName, readonly }) => {
     const changeInputValue = event => onChange(event, name);
     return (
         <div className='input'>
@@ -15,6 +15,7 @@ const Input = ({ onChange, isError, error, type, name, ref, value, placeholder, 
                         value={value}
                         onChange={changeInputValue}
                         placeholder={placeholder}
+                        readOnly={readonly}
                     />
                 </div>
             </div>

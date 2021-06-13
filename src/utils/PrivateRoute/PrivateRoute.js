@@ -1,10 +1,12 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-const PrivateRoute = ({ component: Component, auth, ...rest }) => {
+
+const PrivateRoute = ({ component: Component, token, ...rest }) => {
+    console.log('token', token);
     return (
         <Route
             {...rest}
-            render={props => !auth ? <Redirect to="/"/> : <Component {...props} />}
+            render={props => token ? <Component {...props} /> : <Redirect to="/"/>}
         />
     );
 }

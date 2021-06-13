@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useHistory } from "react-router-dom";
 
 import Input from "../customComponents/Input/Input";
 import { toast } from 'react-toastify';
@@ -7,33 +8,62 @@ import { registerState } from "../../constants/register";
 import { Link } from "react-router-dom";
 import { ROUTER_PATHS } from "../../constants/router";
 import { validateInput } from "../../helpers/loginHelper";
-import {getCaptcha, register} from "../../helpers/requests";
+import {getSimpleUser, register} from "../../helpers/requests";
 
 import './register.css';
+import classNames from "classnames";
+import moment from "moment";
 
-const Register = () => {
+const Register = ({isEdit, onSubmitEditAdd, id, modalName, isAdd}) => {
+    const history = useHistory();
     const [state, setState] = React.useState(registerState);
+    const [user, setUser] = React.useState({});
+    const [uniqIdState, setUniqId] = React.useState('');
     React.useEffect(() => {
-        getCaptcha();
+        const uniqId = new Date().getTime();
+        setUniqId(uniqId);
+        if (isEdit) {
+            getSimpleUser(id).then(data => {
+                setState(prev => ({ ...prev, login: data.login, role: data.role, last_name: data.lastName, first_name: data.firstName, birthday: moment(data.birthday).format("YYYY-MM-DD"), email: data.email }))
+                setUser(data);
+            });
+        }
     }, []);
     const onChangeInputs = (event, name) => {
         const value = event.target.value;
         const fieldName = name.toLowerCase();
         const isError = validateInput(value, fieldName, state.password);
-        console.log('ocChangeFunc', `isError${name}`, fieldName, isError)
         setState(prev => ({ ...prev, [`isError${name}`]: isError, [fieldName]: value }));
+    };
+
+    const editUser = () => {
+        const { isErrorLogin, isErrorPassword, isErrorpassword_again, isErrorEmail, isErrorfirst_name, isErrorlast_name, isErrorBirthday, isErrorCaptcha } = state;
+        const isValidData = !isErrorLogin && !isErrorPassword && !isErrorpassword_again && !isErrorEmail && !isErrorfirst_name && !isErrorlast_name && !isErrorBirthday && !isErrorCaptcha;
+        if (isValidData) {
+            onSubmitEditAdd(user.id, state, uniqIdState);
+        } else {
+            toast.error("Не валидные данные");
+        }
     };
 
     const handleRegister = () => {
         const { isErrorLogin, isErrorPassword, isErrorpassword_again, isErrorEmail, isErrorfirst_name, isErrorlast_name, isErrorBirthday, isErrorCaptcha } = state;
         const isValidData = !isErrorLogin && !isErrorPassword && !isErrorpassword_again && !isErrorEmail && !isErrorfirst_name && !isErrorlast_name && !isErrorBirthday && !isErrorCaptcha;
-        if (isValidData) register(state);
+        if (isValidData) register(state, uniqIdState).then(data => {
+            if (data.status === 200) {
+                history.push(ROUTER_PATHS.LOGIN);
+            } else {
+                toast.error("Регистрация не получилась")
+            }
+        });
         else toast.error("Рома не доебуйся");
     };
+
+    const onChangeSelect = event => setState(prev => ({ ...prev, role: event.target.value }));
     return (
-        <div className='register_wrapper'>
-            <div className='register'>
-                <div className='register__title'>Registration</div>
+        <div className={'register_wrapper'}>
+            <div className={classNames('register', { 'edit_modal': isEdit || isAdd })}>
+                <div className='register__title'>{modalName ? modalName : 'Registration'}</div>
                 <div className='register__inputs'>
                     <Input
                         type='text'
@@ -43,6 +73,7 @@ const Register = () => {
                         value={state.login}
                         onChange={onChangeInputs}
                         error='Invalid login'
+                        readonly={isEdit ? 'readonly' : ''}
                         isError={state.isErrorLogin}
                     />
                     <Input
@@ -107,7 +138,7 @@ const Register = () => {
                     />
                     <div>
                         <div className='captcha__img'>
-                            <img src="http://localhost:8080/rest/captcha"/>
+                            <img src={`http://localhost:8080/rest/captcha/${uniqIdState}`}/>
                         </div>
                         <Input
                             type='text'
@@ -120,8 +151,17 @@ const Register = () => {
                             isError={state.isErrorCaptcha}
                         />
                     </div>
+                    <div className='select_modal'>
+                        <div>Role:</div>
+                        <div>
+                            <select onChange={onChangeSelect} value={state.role}>
+                                <option value='Admin'>Admin</option>
+                                <option value='User'>User</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <div className='register__buttons'>
+                {(!isEdit && !isAdd) ? <div className='register__buttons'>
                     <div className='register__buttons_link'>
                         <Link to={ROUTER_PATHS.LOGIN}>Login</Link>
                     </div>
@@ -131,7 +171,14 @@ const Register = () => {
                             onClick={handleRegister}
                         />
                     </div>
-                </div>
+                </div> :
+                    <div className='edit_btn'>
+                            <button
+                                className='edit_btn'
+                                children='Save'
+                                onClick={editUser}
+                            />
+                    </div>}
             </div>
         </div>
     );

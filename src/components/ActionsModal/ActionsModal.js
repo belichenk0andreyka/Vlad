@@ -11,12 +11,12 @@ const customStyles = {
         right                 : 'auto',
         bottom                : 'auto',
         marginRight           : '-50%',
-        transform             : 'translate(-50%, -50%)'
+        transform             : 'translate(-50%, -50%)',
+        background            : 'rgba(255, 255, 255, 1)',
     }
 };
 
-const ActionsModal = ({ onSubmit, isOpen, closeModal, btnText, onOpen, id }) => {
-    const onSubmitHandler = () => onSubmit(id);
+const ActionsModal = ({ isOpen, closeModal, btnText, onOpen, children }) => {
     return (
         <div>
             <button onClick={onOpen}>{btnText}</button>
@@ -26,14 +26,7 @@ const ActionsModal = ({ onSubmit, isOpen, closeModal, btnText, onOpen, id }) => 
                 onRequestClose={closeModal}
                 contentLabel="Example Modal"
             >
-                <div className='modal'>
-                    <h2>Confirm</h2>
-                    <div>Are you sure?</div>
-                    <div className='modal__buttons'>
-                        <button onClick={onSubmitHandler}>Yes</button>
-                        <button onClick={closeModal}>No</button>
-                    </div>
-                </div>
+                {children}
             </Modal>
         </div>
     );
