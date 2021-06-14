@@ -10,6 +10,7 @@ import './users.css';
 const Users = () => {
     const [users, setUsers] = React.useState([]);
     const [userId, setUserId] = React.useState(null);
+    const [userState, setUserState] = React.useState({});
     const [isOpenEdit, setIsOpenEdit] = React.useState(false);
     const [isOpenAdd, setIsOpenAdd] = React.useState(false);
     const [isOpenDelete, setIsOpenDelete] = React.useState(false);
@@ -26,22 +27,28 @@ const Users = () => {
                 toast.success("Юзер успешно ismenen");
             } else {
                 toast.error("рома не доебуйся");
+                setIsOpenEdit(false);
+                setIsOpenEdit(true);
+
             }
         });
     };
-    const onSubmitDelete = id => deleteUser(id).then((data) => {
+    const onSubmitDelete = () => deleteUser(userId).then((data) => {
         if (data.status === 200) {
-            setUsers(users.filter(user => user.id !== id));
+            setUsers(users.filter(user => user.id !== userId));
             setIsOpenDelete(false);
             toast.success("Юзер успешно удален")
+            setUserId(null);
         } else {
             toast.error("рома не доебуйся")
         }
     });
 
     const openEditModal = id => {
+        const user = users.find(item => item.id === id);
         setUserId(id);
         setIsOpenEdit(true);
+        setUserState(user);
     };
 
     const openAddUserModal = () => {
@@ -58,6 +65,11 @@ const Users = () => {
                 toast.error("рома не доебуйся");
             }
         });
+    };
+
+    const openModalDelete = id => {
+        setIsOpenDelete(true);
+        setUserId(id);
     };
 
     return (
@@ -82,7 +94,7 @@ const Users = () => {
                     <div className='table__actions table__row_item'>Actions</div>
                 </div>
                 {users.map(user => (
-                    <div className='table__row'>
+                    <div className='table__row' key={user.id}>
                         <div className='table__login table__row_item'>{user.login}</div>
                         <div className='table__first_name table__row_item'>{user.firstName}</div>
                         <div className='table__last_name table__row_item'>{user.lastName}</div>
@@ -95,19 +107,19 @@ const Users = () => {
                                 onOpen={() => openEditModal(user.id)}
                                 closeModal={() => setIsOpenEdit(false)}
                             >
-                                <Register isEdit onSubmitEdit={onSubmitEdit} id={userId} modalName='Edit User' />
+                                <Register isEdit onSubmitEditAdd={onSubmitEdit} id={userId} modalName='Edit User' userProp={userState} />
                             </ActionsModal>
                             <ActionsModal
                                 btnText='Delete'
                                 isOpen={isOpenDelete}
-                                onOpen={() => setIsOpenDelete(true)}
+                                onOpen={() => openModalDelete(user.id)}
                                 closeModal={() => setIsOpenDelete(false)}
                             >
                                 <div className='modal'>
                                     <h2>Confirm</h2>
                                     <div>Are you sure?</div>
                                     <div className='modal__buttons'>
-                                        <button onClick={() => onSubmitDelete(user.id)}>Yes</button>
+                                        <button onClick={onSubmitDelete}>Yes</button>
                                         <button onClick={() => setIsOpenDelete(false)}>No</button>
                                     </div>
                                 </div>

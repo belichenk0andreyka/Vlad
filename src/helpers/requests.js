@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const DOMAIN = 'http://localhost:8080/rest/';
 
@@ -29,12 +30,14 @@ export const register = async ({ login, password, password_again, email, first_n
 };
 
 export const getUsers = async () => {
+    const { token } = JSON.parse(Cookies.get('user'));
     const response = await fetch(`${DOMAIN}users`, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
+            'token': token,
         },
     });
     const final = await response.json();
@@ -42,8 +45,12 @@ export const getUsers = async () => {
 };
 
 export const deleteUser = async id => {
+    const { token } = JSON.parse(Cookies.get('user'));
     const response = await fetch(`${DOMAIN}users/${id}`, {
         method: 'DELETE',
+        headers: {
+            'token': token,
+        },
     });
     return Promise.resolve(response);
 };
@@ -66,12 +73,14 @@ export const loginUser = async ({login, password}) => {
 };
 
 export const editUser = async ({login, password, password_again, email, first_name, last_name, birthday, captcha, role}, userId, uniqId) => {
+    const { token } = JSON.parse(Cookies.get('user'));
     const response = await fetch(`${DOMAIN}users/update`, {
         method: 'PUT',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
+            'token': token,
         },
         body: JSON.stringify({
             id: userId,
@@ -105,12 +114,14 @@ export const getSimpleUser = async id => {
 };
 
 export const addUser = async ({login, password, password_again, email, first_name, last_name, birthday, captcha, role}, uniqId) => {
+    const { token } = JSON.parse(Cookies.get('user'));
     const response = await fetch(`${DOMAIN}users/add`, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
+            'token': token,
         },
         body: JSON.stringify({
             id: 0,

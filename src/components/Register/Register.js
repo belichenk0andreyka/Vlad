@@ -8,25 +8,21 @@ import { registerState } from "../../constants/register";
 import { Link } from "react-router-dom";
 import { ROUTER_PATHS } from "../../constants/router";
 import { validateInput } from "../../helpers/loginHelper";
-import {getSimpleUser, register} from "../../helpers/requests";
+import {register} from "../../helpers/requests";
+import moment from 'moment';
 
 import './register.css';
 import classNames from "classnames";
-import moment from "moment";
 
-const Register = ({isEdit, onSubmitEditAdd, id, modalName, isAdd}) => {
+const Register = ({isEdit, onSubmitEditAdd, modalName, isAdd, userProp}) => {
     const history = useHistory();
     const [state, setState] = React.useState(registerState);
-    const [user, setUser] = React.useState({});
     const [uniqIdState, setUniqId] = React.useState('');
     React.useEffect(() => {
         const uniqId = new Date().getTime();
         setUniqId(uniqId);
         if (isEdit) {
-            getSimpleUser(id).then(data => {
-                setState(prev => ({ ...prev, login: data.login, role: data.role, last_name: data.lastName, first_name: data.firstName, birthday: moment(data.birthday).format("YYYY-MM-DD"), email: data.email }))
-                setUser(data);
-            });
+            setState(prev => ({ ...prev, login: userProp.login, role: userProp.role, last_name: userProp.lastName, first_name: userProp.firstName, birthday: moment(userProp.birthday).format("YYYY-MM-DD"), email: userProp.email }))
         }
     }, []);
     const onChangeInputs = (event, name) => {
@@ -40,7 +36,7 @@ const Register = ({isEdit, onSubmitEditAdd, id, modalName, isAdd}) => {
         const { isErrorLogin, isErrorPassword, isErrorpassword_again, isErrorEmail, isErrorfirst_name, isErrorlast_name, isErrorBirthday, isErrorCaptcha } = state;
         const isValidData = !isErrorLogin && !isErrorPassword && !isErrorpassword_again && !isErrorEmail && !isErrorfirst_name && !isErrorlast_name && !isErrorBirthday && !isErrorCaptcha;
         if (isValidData) {
-            onSubmitEditAdd(user.id, state, uniqIdState);
+            onSubmitEditAdd(userProp && userProp.id, state, uniqIdState);
         } else {
             toast.error("Не валидные данные");
         }
